@@ -1,0 +1,10 @@
+-- CreateTable
+CREATE TABLE `Party` (
+    `PARTY_ID` VARCHAR(191) NOT NULL,
+    `PARTY_TYPE` ENUM('PtyAutomatedAgent', 'PtyPerson', 'PtyOrganization') NOT NULL,
+
+    PRIMARY KEY (`PARTY_ID`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `Person` ADD CONSTRAINT `Person_PARTY_ID_fkey` FOREIGN KEY (`PARTY_ID`) REFERENCES `Party`(`PARTY_ID`) ON DELETE RESTRICT ON UPDATE CASCADE;

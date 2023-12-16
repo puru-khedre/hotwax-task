@@ -11,16 +11,18 @@ datasource db {
 }
 
 model Person {
-  PARTY_ID          String         @id
-  SALUTATION        String?
-  FIRST_NAME        String?
-  MIDDLE_NAME       String?
-  LAST_NAME         String?
-  GENDER            String?
-  BIRTH_DATE        DateTime?
-  MARITAL_STATUS    MaritalStatus
-  EMPLOYMENT_STATUS EmployeeStatus
-  OCCUPATION        String?
+  id              Int            @id @default(autoincrement())
+  salutation      String?
+  first_name      String?
+  middle_name     String?
+  last_name       String?
+  gender          String?
+  birth_date      DateTime?
+  marital_status  MaritalStatus
+  employee_status EmployeeStatus
+  occupation      String?
+  party           Party?         @relation(fields: [partyId], references: [id])
+  partyId         Int            @map("partyId")
 }
 
 enum MaritalStatus {
@@ -38,4 +40,95 @@ enum EmployeeStatus {
   EmpsRetired
   EmpsStudent
   EmpsUnemployed
+}
+
+model OrderPart {
+  id                 Int             @id @default(autoincrement())
+  partName           String?
+  statusId           String?
+  vendorPartyId      String?
+  facilityId         String?
+  shipmentMethodEnum ShipmentMethod?
+
+  partyId         Int?
+  customerPartyId Int    @map("customerPartyId")
+  party           Party? @relation(fields: [customerPartyId], references: [id])
+
+  OrderHeader   OrderHeader? @relation(fields: [orderHeaderId], references: [id])
+  orderHeaderId Int?
+
+  status Status
+}
+
+enum Status {
+  OrderOpen
+  OrderRequested
+  OrderProposed
+  OrderPlaced
+  OrderHold
+  OrderProcessing
+  OrderApproved
+  OrderSent
+  OrderCompleted
+  OrderRejected
+  OrderCancelled
+  OrderWishList
+  OrderGiftRegistry
+  OrderAutoReorder
+}
+
+model Party {
+  id         Int         @id @default(autoincrement())
+  PARTY_TYPE PartyType
+  persons    Person[]
+  orderPart  OrderPart[]
+}
+
+enum PartyType {
+  PtyAutomatedAgent
+  PtyPerson
+  PtyOrganization
+}
+
+enum ShipmentMethod {
+  ShMthNextDayPri
+  ShMthNextDay
+  ShMthSecondDay
+  ShMthThirdDay
+  ShMthGround
+  ShMthGroundCom
+  ShMthMotor
+  ShMthPickUp
+}
+
+model OrderHeader {
+  id                 Int          @id @default(autoincrement())
+  orderName          String?
+  placedDate         DateTime?
+  approvedDate       DateTime?
+  status             Status
+  productStoreId     String?
+  salesChannelEnumId SalesChannel
+  grandTotal         Float?
+  COMPLETED_DATE     DateTime?
+  orderPart          OrderPart[]
+
+  @@map("order_header")
+}
+
+enum SalesChannel {
+  Web
+  WebExternal
+  POS
+  Fax
+  Phone
+  Email
+  PostalMail
+  Affiliate
+  EBay
+  Amazon
+  EDI
+  OAGIs
+  Unknown
+  TestOrder
 }
