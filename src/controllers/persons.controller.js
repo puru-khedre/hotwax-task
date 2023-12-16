@@ -30,7 +30,7 @@ module.exports = {
   getSingle: async (req, res) => {
     const { id } = req.params;
     try {
-      const person = await prisma.person.findFirst(+id);
+      const person = await prisma.person.findFirst({ where: { id: +id } });
       console.log(person);
       res.json(person);
     } catch (e) {
@@ -44,9 +44,9 @@ module.exports = {
 
     const data = req.body;
     console.log(data);
-
     try {
       const person = await prisma.person.update({ where: { id }, data });
+      console.log(person);
       res.json(person);
     } catch (e) {
       res.status(400).json({ error: e.message });
