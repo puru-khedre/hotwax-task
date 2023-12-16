@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Person {
+  PARTY_ID          String         @id
+  SALUTATION        String?
+  FIRST_NAME        String?
+  MIDDLE_NAME       String?
+  LAST_NAME         String?
+  GENDER            String?
+  BIRTH_DATE        DateTime?
+  MARITAL_STATUS    MaritalStatus
+  EMPLOYMENT_STATUS EmployeeStatus
+  OCCUPATION        String?
+}
+
+enum MaritalStatus {
+  MarsSingle
+  MarsMarried
+  MarsDivorced
+  MarsWidow
+}
+
+enum EmployeeStatus {
+  EmpsFullTime
+  EmpsPartTime
+  EmpsSelf
+  EmpsHouse
+  EmpsRetired
+  EmpsStudent
+  EmpsUnemployed
+}
