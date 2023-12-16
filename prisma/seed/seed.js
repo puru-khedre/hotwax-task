@@ -31,20 +31,11 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
-  const party = await prisma.party.create({
-    data: {
-      PARTY_TYPE: "PtyAutomatedAgent",
-    },
+  const admin = await prisma.admin.create({
+    data: { password: "admin1@123", username: "admin1" },
   });
 
-  const person = await prisma.person.create({
-    data: {
-      employee_status: "EmpsFullTime",
-      marital_status: "MarsMarried",
-      party: { connect: { id: 16 } },
-    },
-  });
-
+  console.log(admin);
   // console.log({ party, person1, person2 });
 }
 main()
